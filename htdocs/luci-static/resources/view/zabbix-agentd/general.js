@@ -1,113 +1,90 @@
 'use strict';
-'require view';
-'require form';
+
 'require uci';
 'require fs';
 'require ui';
+'require view';
+'require i18n';
+
+var _ = i18n.bind('zabbix-agentd');
 
 return view.extend({
-	render: function() {
-		return E('div', { 'class': 'cbi-map' }, [
-			E('h2', _('Zabbix Agentd 配置')),
-			E('div', { 'class': 'cbi-map-descr' }, _('配置 Zabbix Agentd 监控代理的基本设置')),
-			this.form.render()
-		]);
-	},
-
 	load: function() {
 		return Promise.all([
-			uci.load('zabbix-agentd'),
-			this.get_status()
+			uci.load('zabbix-agentd')
 		]);
 	},
 
-	get_status: function() {
-		return fs.exec_direct('/etc/init.d/zabbix-agentd status').then(function(res) {
-			return res.indexOf('running') !== -1;
-		}).catch(function() {
-			return false;
+	render: function() {
+		var m, s, o;
+
+		m = new ui.Form('zabbix-agentd', {
+			target: ui.url('admin/services/zabbix-agentd/general'),
+			onsave: function() { ui.showNotification(_('Save successful'), 'success'); },
+			onerror: function() { ui.showNotification(_('Save failed'), 'error'); }
 		});
+
+		s = m.section(ui.SimpleSection, null, _('Basic Settings'));
+
+		o = s.option(ui.Flag, 'enabled', _('Enable Zabbix Agentd'));
+		o.default = o.disabled = false;
+
+		o = s.option(ui.Value, 'server', _('Zabbix Server Address'));
+		o.datatype = 'host';
+		o.default = '127.0.0.1';
+
+		o = s.option(ui.Value, 'server_port', _('Zabbix Server Port'));
+		o.datatype = 'port';
+		o.default = '10051';
+
+		o = s.option(ui.Value, 'hostname', _('Hostname'));
+		o.default = '';
+
+		o = s.option(ui.Value, 'listen_ip', _('Listen Address'));
+		o.datatype = 'ipaddr';
+		o.default = '0.0.0.0';
+
+		o = s.option(ui.Value, 'listen_port', _('Listen Port'));
+		o.datatype = 'port';
+		o.default = '10050';
+
+		s = m.section(ui.SimpleSection, null, _('Advanced Settings'));
+
+		o = s.option(ui.ListValue, 'log_level', _('Log Level'));
+		o.value('0', _('Low'));
+		o.value('1', _('Medium'));
+		o.value('2', _('High'));
+		o.value('3', _('Debug'));
+		o.default = '3';
+
+		o = s.option(ui.Value, 'timeout', _('Timeout'));
+		o.datatype = 'uinteger';
+		o.default = '3';
+
+		o = s.option(ui.Value, 'buffer_size', _('Buffer Size'));
+		o.datatype = 'uinteger';
+		o.default = '100';
+
+		o = s.option(ui.Value, 'heartbeat', _('Heartbeat Interval'));
+		o.datatype = 'uinteger';
+		o.default = '30';
+
+		o = s.option(ui.Flag, 'enable_remote_commands', _('Enable Remote Commands'));
+		o.default = o.disabled = false;
+
+		s = m.section(ui.RepeatedSection, 'userparameter', _('User Defined Parameters'));
+		s.addremove = true;
+
+		o = s.option(ui.Value, 'name', _('Parameter Name'));
+		o.rmempty = false;
+
+		o = s.option(ui.Value, 'command', _('Parameter Command'));
+		o.rmempty = false;
+
+		return m.render();
 	},
 
-	init: function() {
-		this.form = new form.Form('/admin/services/zabbix-agentd', 'zabbix-agentd');
-
-		// 基本设置部分
-		var s = this.form.section(form.TypedSection, 'general', _('基本设置'));
-		s.anonymous = true;
-		s.addremove = false;
-
-		// 启用/禁用开关
-		s.option(form.Flag, 'enable', _('启用 Zabbix Agentd'));
-
-		// 服务器地址
-		s.option(form.Value, 'server', _('Zabbix Server 地址'), _('允许连接的 Zabbix Server IP 地址，多个地址用逗号分隔'));
-
-		// 主动模式服务器
-		s.option(form.Value, 'server_active', _('主动模式服务器'), _('主动连接的 Zabbix Server IP:端口'));
-
-		// 主机名
-		s.option(form.Value, 'hostname', _('主机名'), _('服务器上配置的主机名，留空使用系统主机名'));
-
-		// 监听地址
-		s.option(form.Value, 'listen_ip', _('监听地址'), _('Agent 监听的 IP 地址'));
-
-		// 监听端口
-		s.option(form.Value, 'listen_port', _('监听端口'), _('Agent 监听的端口号')).datatype = 'port';
-
-		// 远程命令
-		s.option(form.Flag, 'enable_remote_commands', _('允许远程命令'), _('是否允许服务器执行远程命令'));
-
-		// 日志级别
-		var log_level = s.option(form.ListValue, 'log_level', _('日志级别'));
-		log_level.value('0', _('调试 (Debug)'));
-		log_level.value('1', _('信息 (Info)'));
-		log_level.value('2', _('警告 (Warning)'));
-		log_level.value('3', _('错误 (Error)'));
-		log_level.value('4', _('严重 (Critical)'));
-		log_level.value('5', _('警报 (Alert)'));
-		log_level.value('6', _('灾难 (Disaster)'));
-
-		// 超时设置
-		s.option(form.Value, 'timeout', _('超时时间 (秒)'), _('处理请求的超时时间')).datatype = 'uinteger';
-
-		// 包含目录
-		s.option(form.Value, 'include_dir', _('包含配置目录'), _('包含其他配置文件的目录'));
-
-		// 高级设置部分
-		var advanced = this.form.section(form.TypedSection, 'userparameter', _('用户自定义参数'), _('添加自定义监控项'));
-		advanced.anonymous = true;
-		advanced.addremove = true;
-
-		advanced.option(form.Value, 'name', _('参数名称'), _('参数键名，格式为 <参数名>'));
-		advanced.option(form.TextValue, 'command', _('命令'), _('执行的命令或脚本'));
-
-		// 服务控制按钮
-		this.form.handle(function(section, option, value) {
-			return false;
-		});
-	},
-
-	handleSaveApply: function(ev) {
-		return this.form.save().then(function() {
-			return ui.showModal(_('提示'), E('p', _('配置已保存，请重启服务使配置生效')), [
-				E('button', {
-					'class': 'btn cbi-button cbi-button-positive',
-					'click': function() {
-						fs.exec_direct('/etc/init.d/zabbix-agentd restart');
-						ui.hideModal();
-						setTimeout(function() {
-							location.reload();
-						}, 1000);
-					}
-				}, _('立即重启')),
-				E('button', {
-					'class': 'btn cbi-button cbi-button-negative',
-					'click': function() {
-						ui.hideModal();
-					}
-				}, _('稍后重启'))
-			]);
-		});
+	commit: function() {
+		return uci.save();
 	}
 });

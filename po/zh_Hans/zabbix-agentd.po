@@ -1,0 +1,100 @@
+msgid ""msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "LuCI for Zabbix Agentd"
+msgstr "Zabbix Agentd 配置管理界面"
+
+msgid "Zabbix Agentd"
+msgstr "Zabbix Agentd"
+
+msgid "Basic Settings"
+msgstr "基本设置"
+
+msgid "Advanced Settings"
+msgstr "高级设置"
+
+msgid "Enable Zabbix Agentd"
+msgstr "启用 Zabbix Agentd"
+
+msgid "Zabbix Server Address"
+msgstr "Zabbix 服务器地址"
+
+msgid "Zabbix Server Port"
+msgstr "Zabbix 服务器端口"
+
+msgid "Hostname"
+msgstr "主机名"
+
+msgid "Listen Address"
+msgstr "监听地址"
+
+msgid "Listen Port"
+msgstr "监听端口"
+
+msgid "Log Level"
+msgstr "日志级别"
+
+msgid "Timeout"
+msgstr "超时时间"
+
+msgid "Buffer Size"
+msgstr "缓存大小"
+
+msgid "Heartbeat Interval"
+msgstr "心跳间隔"
+
+msgid "Enable Remote Commands"
+msgstr "允许远程命令"
+
+msgid "User Defined Parameters"
+msgstr "用户自定义参数"
+
+msgid "Add"
+msgstr "添加"
+
+msgid "Delete"
+msgstr "删除"
+
+msgid "Parameter Name"
+msgstr "参数名称"
+
+msgid "Parameter Command"
+msgstr "参数命令"
+
+msgid "Restart Service"
+msgstr "重启服务"
+
+msgid "Stop Service"
+msgstr "停止服务"
+
+msgid "Start Service"
+msgstr "启动服务"
+
+msgid "Save & Apply"
+msgstr "保存应用"
+
+msgid "Save successful"
+msgstr "保存成功"
+
+msgid "Save failed"
+msgstr "保存失败"
+
+msgid "Service restart successful"
+msgstr "服务重启成功"
+
+msgid "Service start successful"
+msgstr "服务启动成功"
+
+msgid "Service stop successful"
+msgstr "服务停止成功"
+
+msgid "Low"
+msgstr "低"
+
+msgid "Medium"
+msgstr "中"
+
+msgid "High"
+msgstr "高"
+
+msgid "Debug"
+msgstr "调试"

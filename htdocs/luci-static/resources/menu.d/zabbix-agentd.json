@@ -1,21 +1,20 @@
 {
 	"admin/services/zabbix-agentd": {
-		"title": "Zabbix Agentd",
+		"title": "$Zabbix Agentd",
 		"order": 60,
 		"action": {
-			"type": "firstchild"
+			"type": "view",
+			"path": "admin/services/zabbix-agentd/general"
 		},
-		"depends": {
-			"acl": ["zabbix-agentd", "luci-app-zabbix-agentd"],
-			"uci": "zabbix-agentd"
-		}
+		"depends": ["zabbix-agentd", "luci-app-zabbix-agent"]
 	},
 	"admin/services/zabbix-agentd/general": {
-		"title": "general",
+		"title": "$Basic Settings",
 		"order": 10,
 		"action": {
 			"type": "view",
-			"path": "zabbix-agentd/general"
-		}
+			"path": "admin/services/zabbix-agentd/general"
+		},
+		"depends": ["zabbix-agentd", "luci-app-zabbix-agent"]
 	}
 }
