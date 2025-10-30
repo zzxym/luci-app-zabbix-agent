@@ -1,7 +1,7 @@
 name: Build-OpenWrt-Zabbix-Agent
 
 on:
-  #push:
+  push:
   workflow_dispatch:
     inputs:
       tag:
