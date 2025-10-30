@@ -26,5 +26,10 @@ include $(TOPDIR)/feeds/luci/luci.mk
 # 这个包是一个纯UI包，不需要额外的下载或编译步骤
 # luci.mk已经提供了所有必要的目标定义
 
+# 确保配置步骤成功完成，这对于修复download目标问题很重要
+define Build/Configure
+	echo "Configuring luci-app-zabbix-agent UI package"
+	touch $(PKG_BUILD_DIR)/.configured
+endef
 
 # call BuildPackage - OpenWrt buildroot signature
