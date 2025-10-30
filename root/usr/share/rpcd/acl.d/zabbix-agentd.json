@@ -1,0 +1,11 @@
+{
+	"zabbix-agentd": {
+		"description": "Access to Zabbix Agentd configuration",
+		"read": {
+			"uci": [ "zabbix-agentd" ]
+		},
+		"write": {
+			"uci": [ "zabbix-agentd" ]
+		}
+	}
+}

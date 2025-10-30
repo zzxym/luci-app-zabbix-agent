@@ -1,0 +1,27 @@
+#!/bin/sh
+
+. /lib/functions.sh
+
+ACTION="$1"
+
+case "$ACTION" in
+	list)
+		cat << EOF
+{
+	"zabbix-agentd": {
+		"description": "Zabbix Agentd configuration access",
+		"read": {
+			"uci": [ "zabbix-agentd" ]
+		},
+		"write": {
+			"uci": [ "zabbix-agentd" ]
+		}
+	}
+}
+EOF
+		;
+	*
+		;
+esac
+
+exit 0

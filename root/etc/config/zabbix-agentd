@@ -1,0 +1,18 @@
+# Zabbix Agentd configuration
+
+config zabbix-agentd 'general'
+	option enable '0'
+	option server '127.0.0.1'
+	option server_active '127.0.0.1:10051'
+	option hostname ''
+	option listen_ip '0.0.0.0'
+	option listen_port '10050'
+	option enable_remote_commands '0'
+	option log_level '3'
+	option log_file '/var/log/zabbix-agentd.log'
+	option timeout '30'
+	option include_dir '/etc/zabbix/zabbix_agentd.d/'
+
+config userparameter
+	option name ''
+	option command ''
