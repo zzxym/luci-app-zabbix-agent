@@ -77,6 +77,8 @@ jobs:
           NO_SHFMT_CHECK: 1
           MAKEFLAGS: -j$(nproc)
           V: s
+          # 增加额外的构建参数，确保正确处理依赖
+          EXTRA_FLAGS: "CONFIG_PACKAGE_luci-app-zabbix-agent=y"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
